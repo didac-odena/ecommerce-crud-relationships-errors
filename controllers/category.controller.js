@@ -9,7 +9,8 @@ const list = async (req, res) => {
    * - Sort by newest first (createdAt descending) if you have timestamps enabled.
    * - Respond with JSON array.
    */
-  throw createError(501, "Category list not implemented yet (Iteration 2)");
+  const categories = await Category.find().sort({ createdAt: -1 });
+  res.status(200).json(categories);
 };
 
 const detail = async (req, res) => {
@@ -20,7 +21,11 @@ const detail = async (req, res) => {
    * - If not found: throw `createError(404, "Category not found")`.
    * - Respond with JSON.
    */
-  throw createError(501, "Category detail not implemented yet (Iteration 2)");
+  const category = await Category.findById(req.params.id);
+  if (!category) {
+    throw createError(404, "Category not found");
+  }
+  res.status(200).json(category);
 };
 
 const create = async (req, res) => {
@@ -30,19 +35,20 @@ const create = async (req, res) => {
    * - Create category from `req.body`.
    * - Respond with 201 + created document.
    */
-  throw createError(501, "Category create not implemented yet (Iteration 2)");
+  const category = await Category.create(req.body);
+  res.status(201).json(category);
 };
 
 const update = async (req, res) => {
-  /**
-   * Iteration 2 - Category CRUD
-   * TODO:
-   * - Update category by id with `req.body`.
-   * - Use `{ new: true, runValidators: true }`.
-   * - If not found: throw `createError(404, "Category not found")`.
-   * - Respond with updated document.
-   */
-  throw createError(501, "Category update not implemented yet (Iteration 2)");
+  const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!category) {
+    throw createError(404, "Category not found");
+  }
+
+  res.status(200).json(category);
 };
 
 const remove = async (req, res) => {
@@ -53,7 +59,13 @@ const remove = async (req, res) => {
    * - If not found: throw `createError(404, "Category not found")`.
    * - Respond with 204 (no content).
    */
-  throw createError(501, "Category remove not implemented yet (Iteration 2)");
+  const category = await Category.findByIdAndDelete(req.params.id);
+
+  if (!category) {
+    throw createError(404, "Category not found");
+  }
+
+  res.status(204).send();
 };
 
 export default {
@@ -61,5 +73,5 @@ export default {
   detail,
   create,
   update,
-  remove
+  remove,
 };

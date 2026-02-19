@@ -11,11 +11,15 @@ import mongoose from "mongoose";
  * - Keep this function small and only responsible for connecting.
  */
 const connectToDatabase = async () => {
-  // Example fallback (you can change DB name):
-  // const mongoUri = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ecommerce-api";
-  // await mongoose.connect(mongoUri);
+  const mongoURI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/ecommerce-api";
 
-  throw new Error("connectToDatabase not implemented yet (Iteration 1)");
+  try {
+    await mongoose.connect(mongoURI);
+    console.log("MongoDB connected");
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    throw new Error(`Failed to connect to MongoDB: ${message}`);
+  }
 };
 
 export default connectToDatabase;

@@ -1,6 +1,8 @@
 import express from "express";
+import morgan from "morgan";
+import createError from "http-errors";
 
-import routesConfig from "./config/routes.config.js";
+import router from "./config/routes.config.js";
 import errorHandlerMiddleware from "./middlewares/error-handler.middleware.js";
 
 /**
@@ -8,18 +10,21 @@ import errorHandlerMiddleware from "./middlewares/error-handler.middleware.js";
  * TODO:
  * - Add request logging with `morgan("dev")`.
  * - Add body parsing with `express.json()`.
- * - Call `routesConfig(app)` to mount all API routes under `/api`.
+ * - Mount the API router under `/api`.
  * - Add a 404 handler using `http-errors` (e.g. `createError(404, "Route not found")`).
  * - Register the global `errorHandlerMiddleware` at the very end.
  */
-
 const app = express();
 
-// TODO (Iteration 1): Register global middleware here.
+app.use(morgan("dev"));
+app.use(express.json());
 
-routesConfig(app);
+app.use("/api", router);
 
-// TODO (Iteration 1): Add a 404 handler here.
+app.use((req, res, next) => {
+  const error = createError(404, "Route not found");
+  next(error);
+});
 
 app.use(errorHandlerMiddleware);
 

@@ -8,13 +8,34 @@
  *   - Mongoose `CastError` -> 400
  * - Fall back to `error.status || error.statusCode || 500`.
  */
+
 const errorHandlerMiddleware = (error, req, res, next) => {
-  const statusCode = 500;
+  let statusCode = error.status || error.statusCode || 500;
+  let message = error.message || "Internal Server Error";
+  let errors = null;
+
+  if (error.code === 11000) {
+    statusCode = 409;
+    message = "Duplicate key error";
+  }
+
+  if (error.name === "ValidationError") {
+    statusCode = 400;
+    errors = Object.keys(error.errors).map(key => ({
+      field: key,
+      message: error.errors[key].message
+    }));
+  }
+
+  if (error.name === "CastError") {
+    statusCode = 400;
+    message = "Invalid ObjectId";
+  }
 
   return res.status(statusCode).json({
     statusCode,
-    message: "Global error handler not implemented yet (Iterations 1 & 9)",
-    errors: null
+    message,
+    errors
   });
 };
 
