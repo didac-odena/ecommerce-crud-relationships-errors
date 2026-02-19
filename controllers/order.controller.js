@@ -7,153 +7,80 @@ import Order from "../models/order.model.js";
 import OrderItem from "../models/order-item.model.js";
 
 const getOrderWithItems = async (orderId) => {
-  const order = await Order.findById(orderId).populate("customer");
-
-  if (!order) {
-    return null;
-  }
-
-  const items = await OrderItem.find({ order: order._id }).populate("product");
-
-  return {
-    ...order.toObject(),
-    items
-  };
+  /**
+   * Iteration 7 - Orders detail/list should include lines
+   * TODO:
+   * - Find the order and `populate("customer")`.
+   * - If not found: return `null`.
+   * - Find the order items and `populate("product")`.
+   * - Return a merged object `{ ...order.toObject(), items }`.
+   */
+  throw createError(501, "getOrderWithItems not implemented yet (Iteration 7)");
 };
 
 const list = async (req, res) => {
-  const filter = {};
-
-  if (req.query.status) {
-    filter.status = req.query.status;
-  }
-
-  if (req.query.customer && mongoose.Types.ObjectId.isValid(req.query.customer)) {
-    filter.customer = req.query.customer;
-  }
-
-  const orders = await Order.find(filter).populate("customer").sort({ createdAt: -1 });
-
-  const orderIds = orders.map((order) => order._id);
-  const orderItems = await OrderItem.find({ order: { $in: orderIds } }).populate("product");
-
-  const itemsByOrderId = {};
-  orderItems.forEach((orderItem) => {
-    const orderId = orderItem.order.toString();
-
-    if (!itemsByOrderId[orderId]) {
-      itemsByOrderId[orderId] = [];
-    }
-
-    itemsByOrderId[orderId].push(orderItem);
-  });
-
-  const response = orders.map((order) => ({
-    ...order.toObject(),
-    items: itemsByOrderId[order._id.toString()] || []
-  }));
-
-  res.json(response);
+  /**
+   * Iteration 7 - Orders list
+   * TODO:
+   * - List orders and include customer + order lines (items + product).
+   *
+   * Iteration 8 - Orders filters
+   * TODO:
+   * - Filter by `status` (string)
+   * - Filter by `customer` (ObjectId)
+   */
+  throw createError(501, "Order list not implemented yet (Iterations 7 & 8)");
 };
 
 const detail = async (req, res) => {
-  const order = await getOrderWithItems(req.params.id);
-
-  if (!order) {
-    throw createError(404, "Order not found");
-  }
-
-  res.json(order);
+  /**
+   * Iteration 7 - Orders detail
+   * TODO:
+   * - Reuse `getOrderWithItems(req.params.id)`.
+   * - If not found: throw `createError(404, "Order not found")`.
+   */
+  throw createError(501, "Order detail not implemented yet (Iteration 7)");
 };
 
 const create = async (req, res) => {
-  const { customer, items } = req.body;
-
-  if (!Array.isArray(items) || items.length === 0) {
-    throw createError(400, "Order must include at least one item");
-  }
-
-  const customerExists = await Customer.findById(customer);
-
-  if (!customerExists) {
-    throw createError(400, "Customer not found");
-  }
-
-  const productIds = items.map((item) => item.product);
-  const uniqueProductIds = [...new Set(productIds)];
-  const products = await Product.find({ _id: { $in: uniqueProductIds } });
-
-  if (products.length !== uniqueProductIds.length) {
-    throw createError(400, "One or more products were not found");
-  }
-
-  const productsById = {};
-  products.forEach((product) => {
-    productsById[product._id.toString()] = product;
-  });
-
-  const order = await Order.create({
-    customer,
-    status: "pending",
-    total: 0
-  });
-
-  const orderItemsData = items.map((item) => {
-    const quantity = Number(item.quantity);
-
-    if (quantity <= 0) {
-      throw createError(400, "Quantity must be greater than 0");
-    }
-
-    const product = productsById[item.product];
-    const unitPrice = Number(product.price);
-    const subtotal = unitPrice * quantity;
-
-    return {
-      order: order._id,
-      product: product._id,
-      quantity,
-      unitPrice,
-      subtotal
-    };
-  });
-
-  const createdItems = await OrderItem.insertMany(orderItemsData);
-  const total = createdItems.reduce((accumulator, item) => accumulator + item.subtotal, 0);
-
-  order.total = total;
-  await order.save();
-
-  const response = await getOrderWithItems(order._id);
-  res.status(201).json(response);
+  /**
+   * Iteration 6 - Create order with lines
+   * TODO:
+   * - Validate `items` is a non-empty array.
+   * - Validate the customer exists.
+   * - Validate all products exist.
+   * - Create the Order first (total 0, status "pending").
+   * - Create OrderItems using:
+   *   - `unitPrice` snapshot from Product.price
+   *   - `subtotal = unitPrice * quantity`
+   * - Compute and save Order.total.
+   * - Respond with 201 + order + populated customer + populated items.
+   */
+  throw createError(501, "Order create not implemented yet (Iteration 6)");
 };
 
 const updateStatus = async (req, res) => {
-  const { status } = req.body;
-
-  const order = await Order.findByIdAndUpdate(
-    req.params.id,
-    { status },
-    { new: true, runValidators: true }
-  );
-
-  if (!order) {
-    throw createError(404, "Order not found");
-  }
-
-  const response = await getOrderWithItems(order._id);
-  res.json(response);
+  /**
+   * Iteration 7 - Update order status
+   * TODO:
+   * - Update only the `status` field.
+   * - Use `{ new: true, runValidators: true }` to enforce the enum.
+   * - If not found: throw `createError(404, "Order not found")`.
+   * - Respond with updated order + items.
+   */
+  throw createError(501, "Order updateStatus not implemented yet (Iteration 7)");
 };
 
 const remove = async (req, res) => {
-  const order = await Order.findByIdAndDelete(req.params.id);
-
-  if (!order) {
-    throw createError(404, "Order not found");
-  }
-
-  await OrderItem.deleteMany({ order: req.params.id });
-  res.status(204).send();
+  /**
+   * Iteration 7 - Delete order
+   * TODO:
+   * - Delete the Order.
+   * - If not found: throw `createError(404, "Order not found")`.
+   * - Delete all OrderItems referencing this order (`deleteMany`).
+   * - Respond with 204.
+   */
+  throw createError(501, "Order remove not implemented yet (Iteration 7)");
 };
 
 export default {

@@ -2,39 +2,24 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
+/**
+ * Iteration 5 - OrderItem model
+ * TODO:
+ * - Add fields:
+ *   - `order` (ObjectId ref "Order", required)
+ *   - `product` (ObjectId ref "Product", required)
+ *   - `quantity` (Number, required, min 1)
+ *   - `unitPrice` (Number, required, min 0)
+ *   - `subtotal` (Number, required, min 0)
+ * - Enable timestamps.
+ */
 const orderItemSchema = new Schema(
   {
-    order: {
-      type: Schema.Types.ObjectId,
-      ref: "Order",
-      required: [true, "Order item order is required"]
-    },
-    product: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-      required: [true, "Order item product is required"]
-    },
-    quantity: {
-      type: Number,
-      required: [true, "Order item quantity is required"],
-      min: [1, "Quantity must be greater than 0"]
-    },
-    unitPrice: {
-      type: Number,
-      required: [true, "Order item unitPrice is required"],
-      min: [0, "Unit price must be greater than or equal to 0"]
-    },
-    subtotal: {
-      type: Number,
-      required: [true, "Order item subtotal is required"],
-      min: [0, "Subtotal must be greater than or equal to 0"]
-    }
+    // TODO: implement schema fields (Iteration 5).
   },
   {
-    timestamps: true,
-    toJSON: {
-      virtuals: true
-    }
+    // TODO (Iteration 5): consider enabling `timestamps: true`.
+    // timestamps: true,
   }
 );
 

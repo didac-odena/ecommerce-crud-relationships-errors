@@ -5,105 +5,68 @@ import Product from "../models/product.model.js";
 import Category from "../models/category.model.js";
 
 const list = async (req, res) => {
-  const { category, minPrice, maxPrice, page = 1, limit = 10, sortPrice } = req.query;
-  const parsedPage = Math.max(Number(page), 1);
-  const parsedLimit = Math.max(Number(limit), 1);
-  const skip = (parsedPage - 1) * parsedLimit;
-  const filter = {};
-  let sort = { createdAt: -1 };
-
-  if (category && mongoose.Types.ObjectId.isValid(category)) {
-    filter.category = category;
-  }
-
-  if (minPrice || maxPrice) {
-    filter.price = {};
-
-    if (minPrice) {
-      filter.price.$gte = Number(minPrice);
-    }
-
-    if (maxPrice) {
-      filter.price.$lte = Number(maxPrice);
-    }
-  }
-
-  if (sortPrice === "asc") {
-    sort = { price: 1 };
-  }
-
-  if (sortPrice === "desc") {
-    sort = { price: -1 };
-  }
-
-  const [products, total] = await Promise.all([
-    Product.find(filter).populate("category").sort(sort).skip(skip).limit(parsedLimit),
-    Product.countDocuments(filter)
-  ]);
-
-  res.json({
-    meta: {
-      page: parsedPage,
-      limit: parsedLimit,
-      total,
-      totalPages: Math.ceil(total / parsedLimit) || 1
-    },
-    data: products
-  });
+  /**
+   * Iteration 3 - Product CRUD + Category relation
+   * TODO:
+   * - List products and `populate("category")`.
+   * - Sort by newest first by default.
+   *
+   * Iteration 8 - Filters + pagination
+   * TODO (suggested query params):
+   * - `category` (ObjectId): filter by category
+   * - `minPrice` / `maxPrice`: filter by price range
+   * - `page` / `limit`: pagination
+   * - `sortPrice=asc|desc`: sort by price
+   *
+   * Suggested response shape (Iteration 8):
+   * - `{ meta: { page, limit, total, totalPages }, data: [...] }`
+   */
+  throw createError(501, "Product list not implemented yet (Iterations 3 & 8)");
 };
 
 const detail = async (req, res) => {
-  const product = await Product.findById(req.params.id).populate("category");
-
-  if (!product) {
-    throw createError(404, "Product not found");
-  }
-
-  res.json(product);
+  /**
+   * Iteration 3 - Product CRUD + Category relation
+   * TODO:
+   * - Find product by id and `populate("category")`.
+   * - If not found: throw `createError(404, "Product not found")`.
+   */
+  throw createError(501, "Product detail not implemented yet (Iteration 3)");
 };
 
 const create = async (req, res) => {
-  const categoryExists = await Category.findById(req.body.category);
-
-  if (!categoryExists) {
-    throw createError(400, "Category not found");
-  }
-
-  const createdProduct = await Product.create(req.body);
-  const product = await Product.findById(createdProduct._id).populate("category");
-
-  res.status(201).json(product);
+  /**
+   * Iteration 3 - Product CRUD + Category relation
+   * TODO:
+   * - Validate that `req.body.category` exists (Category.findById).
+   * - If missing: throw `createError(400, "Category not found")`.
+   * - Create the product, then return it with `populate("category")`.
+   * - Respond with 201.
+   */
+  throw createError(501, "Product create not implemented yet (Iteration 3)");
 };
 
 const update = async (req, res) => {
-  if (req.body.category) {
-    const categoryExists = await Category.findById(req.body.category);
-
-    if (!categoryExists) {
-      throw createError(400, "Category not found");
-    }
-  }
-
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true
-  }).populate("category");
-
-  if (!product) {
-    throw createError(404, "Product not found");
-  }
-
-  res.json(product);
+  /**
+   * Iteration 3 - Product CRUD + Category relation
+   * TODO:
+   * - If `req.body.category` is present, validate it exists.
+   * - Update product by id with `{ new: true, runValidators: true }`.
+   * - Populate category in the response.
+   * - If not found: throw `createError(404, "Product not found")`.
+   */
+  throw createError(501, "Product update not implemented yet (Iteration 3)");
 };
 
 const remove = async (req, res) => {
-  const product = await Product.findByIdAndDelete(req.params.id);
-
-  if (!product) {
-    throw createError(404, "Product not found");
-  }
-
-  res.status(204).send();
+  /**
+   * Iteration 3 - Product CRUD
+   * TODO:
+   * - Delete product by id.
+   * - If not found: throw `createError(404, "Product not found")`.
+   * - Respond with 204 (no content).
+   */
+  throw createError(501, "Product remove not implemented yet (Iteration 3)");
 };
 
 export default {

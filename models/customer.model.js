@@ -2,32 +2,22 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
+/**
+ * Iteration 4 - Customer model
+ * TODO:
+ * - Add fields:
+ *   - `firstName` (String, required, trim)
+ *   - `lastName` (String, required, trim)
+ *   - `email` (String, required, unique, lowercase, trim, match email format)
+ * - Enable timestamps.
+ */
 const customerSchema = new Schema(
   {
-    firstName: {
-      type: String,
-      required: [true, "Customer firstName is required"],
-      trim: true
-    },
-    lastName: {
-      type: String,
-      required: [true, "Customer lastName is required"],
-      trim: true
-    },
-    email: {
-      type: String,
-      required: [true, "Customer email is required"],
-      unique: true,
-      lowercase: true,
-      trim: true,
-      match: [/^\S+@\S+\.\S+$/, "Email format is invalid"]
-    }
+    // TODO: implement schema fields (Iteration 4).
   },
   {
-    timestamps: true,
-    toJSON: {
-      virtuals: true
-    }
+    // TODO (Iteration 4): consider enabling `timestamps: true`.
+    // timestamps: true,
   }
 );
 

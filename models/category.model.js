@@ -2,24 +2,21 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
+/**
+ * Iteration 2 - Category model
+ * TODO:
+ * - Add fields:
+ *   - `name` (String, required, trim)
+ *   - `description` (String, required, trim)
+ * - Enable timestamps.
+ */
 const categorySchema = new Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Category name is required"],
-      trim: true
-    },
-    description: {
-      type: String,
-      required: [true, "Category description is required"],
-      trim: true
-    }
+    // TODO: implement schema fields (Iteration 2).
   },
   {
-    timestamps: true,
-    toJSON: {
-      virtuals: true
-    }
+    // TODO (Iteration 2): consider enabling `timestamps: true`.
+    // timestamps: true,
   }
 );
 

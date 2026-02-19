@@ -2,43 +2,25 @@ import mongoose from "mongoose";
 
 const { Schema, model } = mongoose;
 
+/**
+ * Iteration 3 - Product model
+ * TODO:
+ * - Add fields:
+ *   - `name` (String, required, trim)
+ *   - `description` (String, required, trim)
+ *   - `price` (Number, required, min 0)
+ *   - `stock` (Number, required, min 0)
+ *   - `category` (ObjectId ref "Category", required)
+ *   - `isActive` (Boolean, default true)
+ * - Enable timestamps.
+ */
 const productSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Product name is required"],
-      trim: true
-    },
-    description: {
-      type: String,
-      required: [true, "Product description is required"],
-      trim: true
-    },
-    price: {
-      type: Number,
-      required: [true, "Product price is required"],
-      min: [0, "Price must be greater than or equal to 0"]
-    },
-    stock: {
-      type: Number,
-      required: [true, "Product stock is required"],
-      min: [0, "Stock must be greater than or equal to 0"]
-    },
-    category: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-      required: [true, "Category is required"]
-    },
-    isActive: {
-      type: Boolean,
-      default: true
-    }
+    // TODO: implement schema fields (Iteration 3).
   },
   {
-    timestamps: true,
-    toJSON: {
-      virtuals: true
-    }
+    // TODO (Iteration 3): consider enabling `timestamps: true`.
+    // timestamps: true,
   }
 );
 
