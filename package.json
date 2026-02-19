@@ -1,4 +1,23 @@
 {
+  "name": "api-rest-express-mongoose-ecommerce",
+  "version": "1.0.0",
+  "description": "Bootcamp practice REST API for e-commerce",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "seed": "node data/seed.js",
+    "test": "echo \"No tests configured yet\""
+  },
+  "keywords": [
+    "express",
+    "mongoose",
+    "ecommerce",
+    "rest-api"
+  ],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "express": "^5.2.1",
     "http-errors": "^2.0.1",
@@ -8,5 +27,4 @@
   "devDependencies": {
     "nodemon": "^3.1.11"
   }
-  
 }

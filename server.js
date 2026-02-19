@@ -1,0 +1,18 @@
+import app from "./app.js";
+import connectToDatabase from "./config/db.config.js";
+
+const PORT = process.env.PORT || 3000;
+
+const startServer = async () => {
+  try {
+    await connectToDatabase();
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();
